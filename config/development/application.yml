@@ -1,0 +1,39 @@
+spring  :
+  flyway    :
+    enabled  : true
+    locations: classpath:db/migration
+    url      : jdbc:postgresql://localhost:5432/auth_service_dev
+    user     : postgres
+    password :
+  datasource:
+    hikari  :
+      maximum-pool-size: 10
+      minimum-idle     : 1
+    name    : auth_service_dev
+    password:
+    url     : jdbc:postgresql://localhost:5432/auth_service_dev
+    username: postgres
+  jpa       :
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+server  :
+  port: 8888
+
+internal:
+  server:
+    port: 8886
+
+login   :
+  url: http://localhost:8888/auth/login
+
+inbound :
+  user:
+    api:
+      key: a165d856b3b04e3d0d26400c4e469979
+
+aes     :
+  secret: BkvmRMItjZUvyyfEHojOcldXOkcdjcXB9IQhWfUsSLc=

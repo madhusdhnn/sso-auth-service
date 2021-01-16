@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Auth Service</title>
+</head>
+<body>
+<h1>Hello World</h1>
+<form th:action="@{/auth/login}" method="POST">
+    <div th:if="${param.error}">
+        <p th:text="${param.error}"></p>
+    </div>
+    <label>
+        <input type="email" name="email">
+    </label>
+    <label>
+        <input type="password" name="password">
+    </label>
+    <button type="submit">submit</button>
+    <input type="hidden" id="redirect" name="redirect" th:value="${redirect}"/>
+</form>
+</body>
+</html>
