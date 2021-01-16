@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collections;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -32,7 +33,7 @@ public class CrsAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setCharacterEncoding(UTF_8.displayName());
 
         PrintWriter writer = response.getWriter();
-        objectMapper.writeValue(writer, authException.getMessage());
+        objectMapper.writeValue(writer, Collections.singletonMap("error", authException.getMessage()));
         writer.flush();
     }
 }

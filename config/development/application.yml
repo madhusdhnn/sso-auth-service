@@ -37,3 +37,7 @@ inbound :
 
 aes     :
   secret: BkvmRMItjZUvyyfEHojOcldXOkcdjcXB9IQhWfUsSLc=
+
+auth    :
+  cookie:
+    name: crs-auth-token

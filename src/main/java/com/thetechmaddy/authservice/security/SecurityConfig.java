@@ -4,26 +4,25 @@ import com.thetechmaddy.authservice.security.handlers.LoginFailureHandler;
 import com.thetechmaddy.authservice.security.handlers.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CrsAuthenticationProvider crsAuthenticationProvider;
     private final CrsAuthenticationEntryPoint crsAuthenticationEntryPoint;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
 
     @Autowired
-    public SecurityConfig(CrsAuthenticationProvider crsAuthenticationProvider,
-                          CrsAuthenticationEntryPoint crsAuthenticationEntryPoint,
+    public SecurityConfig(CrsAuthenticationEntryPoint crsAuthenticationEntryPoint,
                           LoginSuccessHandler loginSuccessHandler, LoginFailureHandler loginFailureHandler) {
-        this.crsAuthenticationProvider = crsAuthenticationProvider;
         this.crsAuthenticationEntryPoint = crsAuthenticationEntryPoint;
         this.loginSuccessHandler = loginSuccessHandler;
         this.loginFailureHandler = loginFailureHandler;
@@ -31,7 +30,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(this.crsAuthenticationProvider);
+        auth.authenticationProvider(authenticationProvider());
+    }
+
+    private AuthenticationProvider authenticationProvider() {
+        return new UserAuthenticationProvider(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -47,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(crsAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/internal/auth/initiate").permitAll() //TODO: Remove after initial dev
+                .antMatchers("/internal/auth/initiate").permitAll()
                 .antMatchers("/auth/login").permitAll()
                 .antMatchers("/auth/authenticate").permitAll()
                 .antMatchers("/auth/error").permitAll()
