@@ -1,0 +1,15 @@
+---
+- hosts       : all
+  become      : yes
+  vars_files  :
+    - vars/all.yml
+    - vars/dev.yml
+
+  gather_facts: False
+
+  tasks       :
+    - include: tasks/create_env.yml
+    - include: tasks/common.yml
+    - include: tasks/nginx.yml
+    - include: tasks/java.yml
+    - include: tasks/dev/postgres.yml

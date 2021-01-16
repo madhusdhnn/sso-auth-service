@@ -1,0 +1,31 @@
+---
+- group: name={{app_group}} state=present
+
+- name: Create Root home directory if does not exist
+  file: path={{home_parent_dir}} state=directory
+
+- user: name={{app_user}} group={{app_group}} home={{user_home_path}} createhome=yes state=present
+
+- file: name={{deploy_dir}} state=directory owner={{app_user}} group={{app_group}} mode=0755
+
+- name: Creating directory for logrotate state
+  file: name="{{deploy_dir}}/logrotate" state=directory owner={{app_user}} group={{app_group}} mode=0755
+
+- name: Creating log directory
+  file: path={{ log_dir }}/{{app_name}} owner={{app_user}} group=root mode=0755 state=directory
+
+- name: Setting up Logrotate
+  template: src=files/logrotate.d/config.j2 dest=/etc/logrotate.d/{{item}} owner={{app_user}} group={{app_group}} mode=0755
+  with_items: "{{logrotate_services}}"
+
+- name: Remove existing Logrotate crontab
+  cron: name="Logrotate {{item}}" hour=03
+    user="root" job="/usr/sbin/logrotate  -f --verbose /etc/logrotate.d/{{item}}"
+    cron_file={{item}} state="absent"
+  with_items: "{{logrotate_services}}"
+
+- name: Setting up crontab
+  cron: name="Logrotate {{item}}" hour=03 minute=0
+    user="{{app_user}}" job="/usr/sbin/logrotate -f --verbose -s "{{deploy_dir}}/logrotate/state" /etc/logrotate.d/{{item}}"
+    cron_file="{{item}}_logrotate"
+  with_items: "{{logrotate_services}}"

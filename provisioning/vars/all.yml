@@ -1,0 +1,12 @@
+---
+app_name          : crs_auth_service
+volume_path       : '/app'
+home_parent_dir   : '{{ volume_path }}/home'
+user_home_path    : '{{ home_parent_dir }}/{{ app_user }}'
+root_dir          : '{{ volume_path }}/{{ app_name }}'
+deploy_dir        : '{{ root_dir }}/{{ app_name }}_service'
+log_dir           : '{{ root_dir }}/log'
+config_file       : '{{ deploy_dir }}/application.yml'
+logging_config    : '{{ deploy_dir }}/log4j2-spring.xml'
+logrotate_services:
+  - "{{ app_name }}"

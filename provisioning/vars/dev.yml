@@ -1,0 +1,12 @@
+---
+app_user        : crs_auth_service
+app_group       : crs_auth_service
+app_log_tag_name: '{{ app_name }}'
+config_file     : '/auth_service/config/development/application.yml'
+server_name     : localhost
+db_url          : jdbc:postgresql://localhost:5432/auth_service_dev
+db_user         : postgres
+db_pass         :
+db_host         : localhost
+db_name         : auth_service_dev
+environment_name: dev

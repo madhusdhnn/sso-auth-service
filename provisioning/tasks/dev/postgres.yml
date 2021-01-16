@@ -1,0 +1,30 @@
+---
+- name : Latest Postgres sources
+  shell: echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+
+- name : Postgres repo keys
+  shell: wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+
+- apt: update_cache=yes
+
+- name      : Install Postgres
+  apt       : name={{item}} state=present
+  with_items:
+    - postgresql-9.6
+    - postgresql-client-9.6
+    - postgresql-contrib-9.6
+    - libpq-dev
+
+- name    : Postgres trust all authentication
+  copy    : content="host all all 0.0.0.0/0 trust" dest=/etc/postgresql/9.6/main/pg_hba.conf force=yes
+  register: pg_changed1
+
+- name      : Postgres listen on all interfaces
+  lineinfile: >
+    line="listen_addresses = '*'" regexp="listen_addresses"
+    dest=/etc/postgresql/9.6/main/postgresql.conf state=present
+  register  : pg_changed2
+
+- name   : Restart postgresql
+  service: name=postgresql state=restarted enabled=yes
+  when   : (pg_changed1 is changed) or (pg_changed2 is changed)

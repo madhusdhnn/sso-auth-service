@@ -1,0 +1,10 @@
+{{ log_dir }}/{{ item }}/*.json
+{{ log_dir }}/{{ item }}/*.log {
+  daily
+  missingok
+  rotate 5
+  compress
+  delaycompress
+  notifempty
+  copytruncate
+}

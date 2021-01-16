@@ -1,0 +1,13 @@
+---
+- apt: update_cache=yes
+
+- name      : Install dependencies
+  apt       : name={{item}} state=present cache_valid_time=3600
+  with_items:
+    - build-essential
+    - ca-certificates
+    - libssl-dev
+    - libpq-dev
+    - zlib1g-dev
+    - curl
+    - wget
