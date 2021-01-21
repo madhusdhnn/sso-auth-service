@@ -1,14 +1,18 @@
 package com.thetechmaddy.authservice.models;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope("request")
 @Getter
+@Setter
 @ToString
-@RequiredArgsConstructor
 public class RequestContext {
 
-    private final String companyId;
+    private String companyId;
 
 }

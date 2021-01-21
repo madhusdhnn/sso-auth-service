@@ -1,5 +1,6 @@
 package com.thetechmaddy.authservice.security;
 
+import com.thetechmaddy.authservice.filters.RequestContextSettingFilter;
 import com.thetechmaddy.authservice.security.handlers.LoginFailureHandler;
 import com.thetechmaddy.authservice.security.handlers.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -18,15 +20,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final WebUserAuthenticationProvider webUserAuthenticationProvider;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
+    private final RequestContextSettingFilter requestContextSettingFilter;
 
     @Autowired
     public SecurityConfig(CrsAuthenticationEntryPoint crsAuthenticationEntryPoint,
                           WebUserAuthenticationProvider webUserAuthenticationProvider,
-                          LoginSuccessHandler loginSuccessHandler, LoginFailureHandler loginFailureHandler) {
+                          LoginSuccessHandler loginSuccessHandler, LoginFailureHandler loginFailureHandler,
+                          RequestContextSettingFilter requestContextSettingFilter) {
         this.crsAuthenticationEntryPoint = crsAuthenticationEntryPoint;
         this.webUserAuthenticationProvider = webUserAuthenticationProvider;
         this.loginSuccessHandler = loginSuccessHandler;
         this.loginFailureHandler = loginFailureHandler;
+        this.requestContextSettingFilter = requestContextSettingFilter;
     }
 
     @Override
@@ -46,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(crsAuthenticationEntryPoint)
                 .and()
+                .addFilterBefore(this.requestContextSettingFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/internal/auth/initiate").permitAll()
                 .antMatchers("/auth/login").permitAll()

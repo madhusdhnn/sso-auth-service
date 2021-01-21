@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "users")
-public class Employee {
+public class Employee implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -35,11 +36,11 @@ public class Employee {
     private String organizationId;
 
     @JsonView(value = View.Employee.class)
-    @Column(name = "emp_id", nullable = false)
+    @Column(name = "emp_id", unique = true, nullable = false)
     private String employeeId;
 
     @JsonView(value = View.Employee.class)
-    @Column(name = "user_name", unique = true, nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
@@ -58,10 +59,12 @@ public class Employee {
     private boolean enabled;
 
     @Column(name = "role_id", nullable = false)
-    private Long roleId;
+    private String roleId;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "emp_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "emp_id", referencedColumnName = "emp_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private Set<Role> roles;
 
     @JsonView(value = View.Employee.class)
@@ -76,7 +79,7 @@ public class Employee {
         this.password = userDetail.getPassword();
         this.mobileNumber = userDetail.getMobileNumber();
         this.emailId = userDetail.getEmailId();
-        this.roleId = (long) userDetail.parseRole().getId();
+        this.roleId = userDetail.parseRole().getId();
         this.enabled = true;
         this.createdAt = OffsetDateTime.now();
     }

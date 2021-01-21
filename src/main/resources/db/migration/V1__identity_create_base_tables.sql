@@ -1,6 +1,7 @@
 CREATE TABLE roles
 (
-    role_id BIGSERIAL PRIMARY KEY,
+    id      BIGSERIAL PRIMARY KEY,
+    role_id TEXT UNIQUE,
     name    TEXT NOT NULL
 );
 
@@ -10,7 +11,7 @@ CREATE TABLE users
     company_id    TEXT                     NOT NULL,
     emp_id        TEXT UNIQUE              NOT NULL,
     org_id        TEXT                     NOT NULL,
-    role_id       BIGINT                   NOT NULL,
+    role_id       TEXT                     NOT NULL,
     user_name     TEXT                     NOT NULL,
     password      TEXT                     NOT NULL,
     email_id      TEXT                     NOT NULL,
@@ -22,8 +23,9 @@ CREATE TABLE users
 
 CREATE TABLE user_role
 (
-    emp_id  TEXT   NOT NULL,
-    role_id BIGINT NOT NULL,
+    emp_id  TEXT NOT NULL,
+    role_id TEXT NOT NULL,
+    PRIMARY KEY (emp_id, role_id),
     CONSTRAINT fk_ur_user_id FOREIGN KEY (emp_id) REFERENCES users (emp_id),
     CONSTRAINT fk_ur_role_id FOREIGN KEY (role_id) REFERENCES roles (role_id)
 );

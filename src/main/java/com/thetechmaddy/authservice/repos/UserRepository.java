@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<Employee, Long> {
 
-    Optional<Employee> findByUsernameAndCompanyId(String username, String companyId);
+    Optional<Employee> findByUsernameIgnoreCaseAndCompanyId(String username, String companyId);
 
 }

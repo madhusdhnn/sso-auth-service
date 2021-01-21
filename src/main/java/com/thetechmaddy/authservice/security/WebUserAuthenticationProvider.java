@@ -2,9 +2,9 @@ package com.thetechmaddy.authservice.security;
 
 import com.thetechmaddy.authservice.domains.Employee;
 import com.thetechmaddy.authservice.models.RequestContext;
-import com.thetechmaddy.authservice.models.RequestContextHolder;
 import com.thetechmaddy.authservice.models.User;
 import com.thetechmaddy.authservice.services.IdentityService;
+import com.thetechmaddy.authservice.utils.BeanUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,7 +44,7 @@ public class WebUserAuthenticationProvider extends AbstractUserDetailsAuthentica
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         try {
-            RequestContext context = RequestContextHolder.getContext();
+            RequestContext context = BeanUtil.getBean(RequestContext.class);
             Employee employee = this.identityService.loadUserByUsernameAndCompanyId(username, context.getCompanyId());
             return new User(employee);
         } catch (Exception internalProblem) {

@@ -23,7 +23,7 @@ public class UserDetail {
     private String password;
     private String mobileNumber;
     private String emailId;
-    private Long roleId;
+    private String roleId;
 
     public boolean validatePassword() {
         Pattern bCryptPattern = Pattern.compile(B_CRYPT_PATTERN_STRING);
@@ -31,7 +31,7 @@ public class UserDetail {
     }
 
     public RoleType parseRole() {
-        return RoleType.parse(Math.toIntExact(this.roleId));
+        return RoleType.parse(this.roleId);
     }
 
 }
