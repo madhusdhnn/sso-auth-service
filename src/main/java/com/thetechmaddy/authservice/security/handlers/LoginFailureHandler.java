@@ -29,6 +29,5 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             loginURLWithErrorMessage = String.format("%s&redirect=%s", loginURLWithErrorMessage, redirectURL);
         }
         response.sendRedirect(loginURLWithErrorMessage);
-
     }
 }

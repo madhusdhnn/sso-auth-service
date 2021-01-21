@@ -1,6 +1,6 @@
 package com.thetechmaddy.authservice.services;
 
-public interface AuthenticationProvider {
+public interface CrsAuthenticationProvider {
 
     String loginURL();
 

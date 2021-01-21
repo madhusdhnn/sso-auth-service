@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component("webAuthenticationProvider")
-public class WebAuthenticationProvider implements AuthenticationProvider {
+public class WebAuthenticationProvider implements CrsAuthenticationProvider {
 
     private final String loginUrl;
 

@@ -6,15 +6,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationProviderFactory {
 
-    private final AuthenticationProvider webAuthenticationProvider;
+    private final CrsAuthenticationProvider webAuthenticationProvider;
 
     @Autowired
-    public AuthenticationProviderFactory(AuthenticationProvider webAuthenticationProvider) {
+    public AuthenticationProviderFactory(CrsAuthenticationProvider webAuthenticationProvider) {
         this.webAuthenticationProvider = webAuthenticationProvider;
     }
 
     // TODO: Support mobile authentication with OTP based
-    public AuthenticationProvider getProvider() {
+    public CrsAuthenticationProvider getProvider() {
         return this.webAuthenticationProvider;
     }
 }

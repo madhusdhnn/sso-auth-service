@@ -53,7 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/internal/auth/initiate").permitAll()
                 .antMatchers("/auth/login").permitAll()
                 .antMatchers("/auth/authenticate").permitAll()
-                .antMatchers("/auth/error").permitAll()
                 .antMatchers("/ping").permitAll() // TODO: add health check controller from Utilities
                 .antMatchers("/**/*.js").permitAll()
                 .antMatchers("/**/*.css").permitAll()
