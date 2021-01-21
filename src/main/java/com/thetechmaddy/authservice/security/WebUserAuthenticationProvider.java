@@ -1,6 +1,12 @@
 package com.thetechmaddy.authservice.security;
 
+import com.thetechmaddy.authservice.domains.Employee;
+import com.thetechmaddy.authservice.models.RequestContext;
+import com.thetechmaddy.authservice.models.RequestContextHolder;
+import com.thetechmaddy.authservice.models.User;
+import com.thetechmaddy.authservice.services.IdentityService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,14 +14,17 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 @Log4j2
-public class UserAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
+@Component
+public class WebUserAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final IdentityService identityService;
 
-    public UserAuthenticationProvider(BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    @Autowired
+    public WebUserAuthenticationProvider(IdentityService identityService) {
+        this.identityService = identityService;
     }
 
     @Override
@@ -26,7 +35,7 @@ public class UserAuthenticationProvider extends AbstractUserDetailsAuthenticatio
         }
 
         String presentedPassword = authentication.getCredentials().toString();
-        if (!isPasswordValid(userDetails, presentedPassword)) {
+        if (!isPasswordValid(((User) userDetails), presentedPassword)) {
             log.error("Authentication failed: Password does not match");
             throw new BadCredentialsException("Authentication failed: Password does not match");
         }
@@ -35,15 +44,16 @@ public class UserAuthenticationProvider extends AbstractUserDetailsAuthenticatio
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         try {
-            return null;
+            RequestContext context = RequestContextHolder.getContext();
+            Employee employee = this.identityService.loadUserByUsernameAndCompanyId(username, context.getCompanyId());
+            return new User(employee);
         } catch (Exception internalProblem) {
             throw new InternalAuthenticationServiceException(internalProblem.getMessage(), internalProblem);
         }
     }
 
-    //TODO: fetch password stored in db
-    private boolean isPasswordValid(UserDetails userDetails, String presentedPassword) {
-        return this.bCryptPasswordEncoder.matches(presentedPassword, userDetails.getPassword());
+    private boolean isPasswordValid(User user, String presentedPassword) {
+        return new BCryptPasswordEncoder().matches(presentedPassword, user.getPassword());
     }
 
 }

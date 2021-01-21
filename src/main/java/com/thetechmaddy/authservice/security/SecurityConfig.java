@@ -4,37 +4,34 @@ import com.thetechmaddy.authservice.security.handlers.LoginFailureHandler;
 import com.thetechmaddy.authservice.security.handlers.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CrsAuthenticationEntryPoint crsAuthenticationEntryPoint;
+    private final WebUserAuthenticationProvider webUserAuthenticationProvider;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
 
     @Autowired
     public SecurityConfig(CrsAuthenticationEntryPoint crsAuthenticationEntryPoint,
+                          WebUserAuthenticationProvider webUserAuthenticationProvider,
                           LoginSuccessHandler loginSuccessHandler, LoginFailureHandler loginFailureHandler) {
         this.crsAuthenticationEntryPoint = crsAuthenticationEntryPoint;
+        this.webUserAuthenticationProvider = webUserAuthenticationProvider;
         this.loginSuccessHandler = loginSuccessHandler;
         this.loginFailureHandler = loginFailureHandler;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
-    }
-
-    private AuthenticationProvider authenticationProvider() {
-        return new UserAuthenticationProvider(new BCryptPasswordEncoder());
+        auth.authenticationProvider(this.webUserAuthenticationProvider);
     }
 
     @Override

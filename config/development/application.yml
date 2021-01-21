@@ -20,6 +20,12 @@ spring  :
           lob:
             non_contextual_creation: true
 
+logging :
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+
 server  :
   port: 8888
 
@@ -39,5 +45,11 @@ aes     :
   secret: BkvmRMItjZUvyyfEHojOcldXOkcdjcXB9IQhWfUsSLc=
 
 auth    :
-  cookie:
+  maxInactiveInterval: 3600
+  cookie             :
     name: crs-auth-token
+  sucessCallBack     : /auth/authenticate
+
+crs     :
+  dashboard:
+    url: /
