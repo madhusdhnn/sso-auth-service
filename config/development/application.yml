@@ -1,4 +1,4 @@
-spring  :
+spring   :
   flyway    :
     enabled  : true
     locations: classpath:db/migration
@@ -20,36 +20,41 @@ spring  :
           lob:
             non_contextual_creation: true
 
-logging :
+logging  :
   level:
     org:
       hibernate:
         SQL: DEBUG
 
-server  :
+server   :
   port: 8888
 
-internal:
+internal :
   server:
     port: 8886
 
-login   :
+login    :
   url: http://localhost:8888/auth/login
 
-inbound :
+inbound  :
   user:
     api:
       key: a165d856b3b04e3d0d26400c4e469979
 
-aes     :
+aes      :
   secret: BkvmRMItjZUvyyfEHojOcldXOkcdjcXB9IQhWfUsSLc=
 
-auth    :
+auth     :
   maxInactiveInterval: 3600
   cookie             :
     name: crs-auth-token
   sucessCallBack     : /auth/authenticate
 
-crs     :
+crs      :
   dashboard:
     url: /
+
+messaging:
+  kafka:
+    topic:
+      auth_user_sync: auth_user_sync_topic

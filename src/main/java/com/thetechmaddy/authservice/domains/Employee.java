@@ -2,6 +2,7 @@ package com.thetechmaddy.authservice.domains;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.thetechmaddy.authservice.messaging.models.UserDetail;
 import com.thetechmaddy.authservice.models.views.View;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -56,6 +57,9 @@ public class Employee {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "role_id", nullable = false)
+    private Long roleId;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "emp_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
@@ -63,6 +67,19 @@ public class Employee {
     @JsonView(value = View.Employee.class)
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
+
+    public Employee(UserDetail userDetail) {
+        this.companyId = userDetail.getCompanyId();
+        this.organizationId = userDetail.getOrganizationId();
+        this.employeeId = userDetail.getUserId();
+        this.username = userDetail.getUsername();
+        this.password = userDetail.getPassword();
+        this.mobileNumber = userDetail.getMobileNumber();
+        this.emailId = userDetail.getEmailId();
+        this.roleId = (long) userDetail.parseRole().getId();
+        this.enabled = true;
+        this.createdAt = OffsetDateTime.now();
+    }
 
     @JsonProperty(value = "roles")
     @JsonView(value = View.Employee.class)
