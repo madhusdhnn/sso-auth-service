@@ -11,4 +11,6 @@ public interface UserRepository extends CrudRepository<Employee, Long> {
 
     Optional<Employee> findByUsernameIgnoreCaseAndCompanyId(String username, String companyId);
 
+    Employee getByUsernameAndCompanyId(String username, String companyId);
+
 }

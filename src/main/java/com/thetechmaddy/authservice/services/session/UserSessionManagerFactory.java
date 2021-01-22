@@ -1,6 +1,5 @@
-package com.thetechmaddy.authservice.services;
+package com.thetechmaddy.authservice.services.session;
 
-import com.thetechmaddy.authservice.services.session.UserSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

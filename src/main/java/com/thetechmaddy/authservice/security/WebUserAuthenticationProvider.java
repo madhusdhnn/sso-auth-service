@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,8 @@ public class WebUserAuthenticationProvider extends AbstractUserDetailsAuthentica
             RequestContext context = BeanUtil.getBean(RequestContext.class);
             Employee employee = this.identityService.loadUserByUsernameAndCompanyId(username, context.getCompanyId());
             return new User(employee);
+        } catch (UsernameNotFoundException ex) {
+            throw ex;
         } catch (Exception internalProblem) {
             throw new InternalAuthenticationServiceException(internalProblem.getMessage(), internalProblem);
         }

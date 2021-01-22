@@ -1,5 +1,6 @@
 package com.thetechmaddy.authservice.services;
 
+import com.thetechmaddy.authservice.services.auth.CrsAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

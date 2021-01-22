@@ -1,4 +1,4 @@
-package com.thetechmaddy.authservice.services;
+package com.thetechmaddy.authservice.exceptions;
 
 public class PasswordNotEncryptedException extends RuntimeException {
 

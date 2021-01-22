@@ -90,6 +90,10 @@ public class Employee implements Serializable {
         return this.roles.stream().map(Role::getName).collect(Collectors.toList());
     }
 
+    public String id() {
+        return String.format("%s_%s", companyId, username);
+    }
+
     @Override
     public String toString() {
         return "Employee{" +

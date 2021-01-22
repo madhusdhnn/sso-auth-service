@@ -30,7 +30,6 @@ public class InternalAuthController extends BaseController {
     @GetMapping(value = "/initiate")
     public ModelAndView initiate(@RequestParam(value = "redirect_url") String redirectURL) {
         String encrypted = aesEncrypt(redirectURL, this.aesKey);
-        System.out.println("Redirect" + redirectURL);
         ModelAndView modelAndView = new ModelAndView(new RedirectView(authenticationService.initiate()));
         modelAndView.addObject("redirect", encrypted);
         return modelAndView;

@@ -1,6 +1,7 @@
 package com.thetechmaddy.authservice.services;
 
 import com.thetechmaddy.authservice.domains.Employee;
+import com.thetechmaddy.authservice.exceptions.PasswordNotEncryptedException;
 import com.thetechmaddy.authservice.messaging.models.UserDetail;
 import com.thetechmaddy.authservice.repos.UserRepository;
 import lombok.extern.log4j.Log4j2;

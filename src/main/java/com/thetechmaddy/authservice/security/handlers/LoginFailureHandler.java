@@ -1,6 +1,7 @@
 package com.thetechmaddy.authservice.security.handlers;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,10 +36,12 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     private String getMessage(AuthenticationException exception) {
         String message = "Sorry! But that did not work, try again";
-        if (exception instanceof InternalAuthenticationServiceException) {
-            message = "There was a problem signing in. Contact support";
-        } else if (exception instanceof UsernameNotFoundException) {
+        if (exception instanceof UsernameNotFoundException) {
             message = "User not found";
+        } else if (exception instanceof InternalAuthenticationServiceException) {
+            message = "There was a problem signing in. Contact support";
+        } else if (exception instanceof BadCredentialsException) {
+            message = "Username and Password does not match";
         }
         return message;
     }

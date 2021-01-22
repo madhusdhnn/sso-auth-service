@@ -60,4 +60,8 @@ public class User implements UserDetails {
     public String getCompanyId() {
         return employee.getCompanyId();
     }
+
+    public String id() {
+        return employee.id();
+    }
 }

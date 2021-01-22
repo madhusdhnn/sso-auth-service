@@ -1,4 +1,8 @@
 spring   :
+  session   :
+    store-type: jdbc
+    jdbc      :
+      initialize-schema: always
   flyway    :
     enabled  : true
     locations: classpath:db/migration
@@ -6,13 +10,14 @@ spring   :
     user     : postgres
     password :
   datasource:
-    hikari  :
+    driver-class-name: org.postgresql.Driver
+    hikari           :
       maximum-pool-size: 10
       minimum-idle     : 1
-    name    : auth_service_dev
-    password:
-    url     : jdbc:postgresql://localhost:5432/auth_service_dev
-    username: postgres
+    name             : auth_service_dev
+    password         :
+    url              : jdbc:postgresql://localhost:5432/auth_service_dev
+    username         : postgres
   jpa       :
     properties:
       hibernate:
@@ -23,7 +28,7 @@ spring   :
 logging  :
   level:
     org:
-      hibernate      :
+      hibernate:
         SQL: DEBUG
 
 server   :
@@ -47,7 +52,7 @@ aes      :
 auth     :
   maxInactiveInterval: 3600
   cookie             :
-    name: crs-auth-token
+    name: x-auth-token
   sucessCallBack     : /auth/authenticate
 
 crs      :
