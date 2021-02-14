@@ -1,7 +1,6 @@
 package com.thetechmaddy.authservice.controllers;
 
 import com.thetechmaddy.authservice.services.AuthenticationService;
-import com.thetechmaddy.authservice.utils.CryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -12,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.thetechmaddy.authservice.utils.CryptUtils.aesDecrypt;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -31,8 +31,7 @@ public class AuthController extends BaseController {
     }
 
     @RequestMapping(value = "/login")
-    public ModelAndView login(@RequestParam(value = "redirect") String redirectParam, ModelAndView modelAndView,
-                              HttpServletResponse response) {
+    public ModelAndView login(@RequestParam(value = "redirect") String redirectParam, ModelAndView modelAndView) {
         modelAndView.addObject("redirect", redirectParam);
         modelAndView.setViewName("login");
         return modelAndView;
@@ -44,7 +43,7 @@ public class AuthController extends BaseController {
         String redirectURL = null;
 
         if (redirectURLEncrypted != null) {
-            redirectURL = CryptUtils.aesDecrypt(redirectURLEncrypted, aesKey);
+            redirectURL = aesDecrypt(redirectURLEncrypted, aesKey);
         }
 
         authenticationService.authenticate(request);
