@@ -55,7 +55,7 @@ auth     :
     name: x-auth-token
   sucessCallBack     : /auth/authenticate
 
-crs      :
+sso      :
   dashboard:
     url: /
 

@@ -19,12 +19,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Log4j2
 @Component
-public class CrsAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class SsoAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public CrsAuthenticationEntryPoint(ObjectMapper objectMapper) {
+    public SsoAuthenticationEntryPoint(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 

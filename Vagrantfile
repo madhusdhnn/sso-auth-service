@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
 
-  config.vm.define "crs_auth_service" do |dev|
+  config.vm.define "sso_auth_service" do |dev|
     dev.vm.provision "ansible" do |ansible|
       ansible.playbook = "provisioning/dev.yml"
       ansible.verbose = "vv"

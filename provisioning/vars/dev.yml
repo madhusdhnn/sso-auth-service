@@ -1,6 +1,6 @@
 ---
-app_user        : crs_auth_service
-app_group       : crs_auth_service
+app_user        : sso_auth_service
+app_group       : sso_auth_service
 app_log_tag_name: '{{ app_name }}'
 config_file     : '/auth_service/config/development/application.yml'
 server_name     : localhost

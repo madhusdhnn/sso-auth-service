@@ -15,18 +15,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CrsAuthenticationEntryPoint crsAuthenticationEntryPoint;
+    private final SsoAuthenticationEntryPoint ssoAuthenticationEntryPoint;
     private final WebUserAuthenticationProvider webUserAuthenticationProvider;
     private final LoginSuccessHandler loginSuccessHandler;
     private final LoginFailureHandler loginFailureHandler;
     private final RequestContextSettingFilter requestContextSettingFilter;
 
     @Autowired
-    public SecurityConfig(CrsAuthenticationEntryPoint crsAuthenticationEntryPoint,
+    public SecurityConfig(SsoAuthenticationEntryPoint ssoAuthenticationEntryPoint,
                           WebUserAuthenticationProvider webUserAuthenticationProvider,
                           LoginSuccessHandler loginSuccessHandler, LoginFailureHandler loginFailureHandler,
                           RequestContextSettingFilter requestContextSettingFilter) {
-        this.crsAuthenticationEntryPoint = crsAuthenticationEntryPoint;
+        this.ssoAuthenticationEntryPoint = ssoAuthenticationEntryPoint;
         this.webUserAuthenticationProvider = webUserAuthenticationProvider;
         this.loginSuccessHandler = loginSuccessHandler;
         this.loginFailureHandler = loginFailureHandler;
@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(crsAuthenticationEntryPoint)
+                .authenticationEntryPoint(ssoAuthenticationEntryPoint)
                 .and()
                 .addFilterBefore(this.requestContextSettingFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()

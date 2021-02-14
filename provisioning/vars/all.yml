@@ -1,5 +1,5 @@
 ---
-app_name          : crs_auth_service
+app_name          : sso_auth_service
 volume_path       : '/app'
 home_parent_dir   : '{{ volume_path }}/home'
 user_home_path    : '{{ home_parent_dir }}/{{ app_user }}'

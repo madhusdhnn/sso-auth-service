@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Component("webAuthenticationProvider")
-public class WebAuthenticationProvider implements CrsAuthenticationProvider {
+public class WebAuthenticationProvider implements SsoAuthenticationProvider {
 
     private final String loginUrl;
     private final AuthSessionManager authSessionManager;

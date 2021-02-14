@@ -19,14 +19,14 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class AuthController extends BaseController {
 
     private final String aesKey;
-    private final String crsDashboardUrl;
+    private final String ssoDashboardUrl;
     private final AuthenticationService authenticationService;
 
     @Autowired
-    public AuthController(@Value("${aes.secret}") String aesKey, @Value("${crs.dashboard.url}") String crsDashboardUrl,
+    public AuthController(@Value("${aes.secret}") String aesKey, @Value("${sso.dashboard.url}") String ssoDashboardUrl,
                           AuthenticationService authenticationService) {
         this.aesKey = aesKey;
-        this.crsDashboardUrl = crsDashboardUrl;
+        this.ssoDashboardUrl = ssoDashboardUrl;
         this.authenticationService = authenticationService;
     }
 
@@ -47,7 +47,7 @@ public class AuthController extends BaseController {
         }
 
         authenticationService.authenticate(request);
-        response.sendRedirect(redirectURL != null ? redirectURL : crsDashboardUrl);
+        response.sendRedirect(redirectURL != null ? redirectURL : ssoDashboardUrl);
     }
 
     @RequestMapping(value = "/logout", method = GET)
