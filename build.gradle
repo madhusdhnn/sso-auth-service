@@ -15,7 +15,7 @@ configurations {
 }
 
 jar {
-    setArchivesBaseName('auth-service')
+    setArchivesBaseName('sso-auth-service')
 }
 
 repositories {
