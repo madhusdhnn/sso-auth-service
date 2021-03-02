@@ -39,7 +39,7 @@ internal :
     port: 8886
 
 login    :
-  url: http://123.car-rental-system.local:8888/auth/login
+  url: http://localhost:8888/auth/login
 
 inbound  :
   user:

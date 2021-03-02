@@ -1,0 +1,82 @@
+---
+- name : Setup Kafka Group
+  group: name={{kafka_group}} system=yes
+
+- name: Setup Kafka User
+  user: name={{kafka_user}} system=yes group={{kafka_group}}
+
+- name   : Download Kafka
+  get_url: url={{kafka_download_url}} dest={{kafka_binary_archive}} owner={{kafka_user}} group={{kafka_group}}
+
+- name     : Untar kafka
+  unarchive:
+    src={{kafka_binary_archive}}
+    dest=/opt
+    creates={{kafka_binary_dir}}
+    copy=no
+    owner={{kafka_user}}
+    group={{kafka_group}}
+
+- name: Create Symlink
+  file:
+    src={{kafka_binary_dir}}
+    path=/opt/kafka
+    state=link
+
+- name    : Create systemd configuration
+  template: dest={{kafka_systemd_service}} owner=root group=root mode=644 src=files/dev/kafka.service.j2
+
+- command: systemctl daemon-reload
+
+- name: Create Kafka Data directory
+  file: path={{kafka_data_dir}} owner={{kafka_user}} group={{kafka_group}} mode=u=rwX,g=rX,o=rX recurse=yes
+
+- name: Remove lost+found in the Data directory
+  file: path="{{kafka_data_dir}}/lost+found" state=absent
+
+- name: Create Log directory
+  file: path={{kafka_log_dir}} state=directory owner={{kafka_user}} group={{kafka_group}} mode=755
+
+- name: Link configuration directory to /opt/kafka/config
+  file: path={{kafka_conf_dir}} state=link src=/opt/kafka/config
+
+- name    : Create log4j.properties
+  template: dest={{kafka_conf_dir}}/log4j.properties owner={{kafka_user}} group={{kafka_group}} mode=644 src=files/dev/log4j.properties.j2
+
+- name    : Copy logrotate configuration
+  template: dest=/etc/logrotate.d/kafka owner=root group=root mode=644 src=files/dev/logrotate.conf.j2
+
+- name    : Create server.properties
+  template: dest={{kafka_conf_dir}}/server.properties owner={{kafka_user}} group={{kafka_group}} mode=644 src=files/dev/server.properties.j2
+
+- name : Enable Kafka daemon service
+  shell: systemctl enable kafka
+
+- name   : Start kafka daemon service
+  service: name=kafka state=restarted
+
+- set_fact: kafka_ports="[]"
+
+- name    : Verify PLAINTEXT listener
+  set_fact: kafka_ports="['9092']"
+  when    : verify
+
+- name : Verify Kafka port
+  debug: msg="ports to verify {{kafka_ports}}"
+
+- name      : Wait for Kafka to start
+  wait_for  : host={{kafka_listen_address | default('localhost')}} port={{item}} state=started timeout=30
+  with_items:
+    - "{{kafka_ports}}"
+  when      : verify
+
+- name       : List topics
+  command    : /opt/kafka/bin/kafka-topics.sh --list --zookeeper localhost:2181
+  become_user: kafka
+  register   : kafka_topics
+
+- name      : Create Kafka topics
+  shell     : /opt/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor {{replication_factor}} --partitions {{partition}} --topic {{item.topic}}
+  with_items:
+    "{{topics}}"
+  when      : item.topic not in kafka_topics.stdout_lines

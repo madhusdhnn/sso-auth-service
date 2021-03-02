@@ -1,0 +1,37 @@
+---
+- name : Setup Zookeeper Group
+  group: name={{zookeeper_group}} system=yes
+
+- name: Setup Zookeeper User
+  user: name={{zookeeper_user}} system=yes group={{zookeeper_group}}
+
+- name: Update apt cache and install Zookeeper
+  apt :
+    name        : zookeeperd
+    update_cache: yes
+
+- name    : Setup zoo.cfg file
+  template: src=files/dev/zoo.cfg.j2 dest={{zookeeper_conf_dir}}/zoo.cfg
+
+- name    : Setup myid file
+  template: src=files/dev/myid.j2 dest={{zookeeper_conf_dir}}/myid
+
+- name    : Setup Java Environment
+  template: src=files/dev/java.env.j2 dest={{zookeeper_conf_dir}}/java.env
+
+- name: Create Log directory
+  file: path={{zookeeper_log_dir}} state=directory owner={{zookeeper_user}} group={{zookeeper_group}} mode=755
+
+- name: Create Data directory
+  file: path={{zookeeper_data_dir}} state=directory owner={{zookeeper_user}} group={{zookeeper_group}} mode=755
+
+- name: Create log4j properties
+  copy: src=files/dev/log4j.properties dest={{zookeeper_conf_dir}}/log4j.properties owner={{zookeeper_user}} group={{zookeeper_group}} mode=644
+
+- name    : Create logrotate configuration
+  template: src=files/dev/logrotate.conf.j2 dest=/etc/logrotate.d/zookeeper owner=root group=root mode=644
+
+- name   : Restart Zookeeper Service
+  service:
+    name : zookeeper.service
+    state: restarted

@@ -13,3 +13,5 @@
     - include: tasks/nginx.yml
     - include: tasks/java.yml
     - include: tasks/dev/postgres.yml
+    - include: tasks/dev/kafka.yml
+    - include: tasks/dev/zookeeper.yml
